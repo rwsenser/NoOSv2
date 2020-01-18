@@ -1,1 +1,1 @@
-..\bochs -q -f myOS.bxrc
+..\bochs -q -f NoOS.bxrc
