@@ -1,0 +1,5 @@
+SOURCE=" ../kernel.c ../NoOS/src/eefs_fileapi.c ../NoOS/src/eefs_filesys.c "
+SOURCE2=" ../NoOS/src/NoOS.c ../NoOS/src/NoOSfs.c "
+gcc -c -Os $SOURCE   $SOURCE2 -I../NoOS/inc -I.. -D_ix86_
+gcc kernel.o eefs_fileapi.o eefs_filesys.o NoOS.o NoOSfs.o -o kernelWos 
+
