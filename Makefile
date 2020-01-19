@@ -1,5 +1,5 @@
 CC=gcc
-TARGET=noos
+TARGET=noosv2
 C_FILES=./NoOSrt/src/memcmp.c \
 	./NoOSrt/src/memcpy.c \
 	./NoOSrt/src/memset.c \
