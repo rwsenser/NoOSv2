@@ -15,7 +15,7 @@ floppyb: 1_44=floppyb.img, status=inserted
 
 # hard disk
 ata0: enabled=1, ioaddr1=0x1f0, ioaddr2=0x3f0, irq=14
-ata0-master: type=disk, path="noos.iso", cylinders=306, heads=4, spt=17
+ata0-master: type=disk, path="noosv2.iso", cylinders=306, heads=4, spt=17
 
 # choose the boot disk.
 boot: c
