@@ -13,7 +13,7 @@
 #include <stdio.h>
 #endif
 
-void splash(char msg[]) {
+void splash(int vers, char msg[]) {
   printf("\n");
   printf("  NN     NN          OOOOOOOOO  SSSSSSSS\n");
   printf("  NNN    NN          OO     OO  SS     S\n");
@@ -23,7 +23,7 @@ void splash(char msg[]) {
   printf("  NN   NNNN  o    o  OO     OO  S     SS\n");
   printf("  NN     NN  oooooo  OOOOOOOOO  SSSSSSSS\n");
   printf("\n");
-  printf("                        (version: %s)\n", msg);
+  printf("                        (vers:%d, bld:%s)\n", vers, msg);
   return;
 }
 

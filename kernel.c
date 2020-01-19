@@ -18,8 +18,9 @@
 // 3f) Make configurable, things like malloc area, file space size, stack size, etc.
 // 4f) Add a reboot command
 //
-char version[16] = "??8??";
-char dynamic_version[16] = "v13-a";
+const int version = 2;
+char build[16] = "?????";
+char dynamic_build[16] = "v13-a";
 const char time_msg[] = "current CPU time (secs): %d\n";
 const char dur_msg[] = ("\nCPU duration secs: %d\n");
 const int max_programs = 20;
@@ -62,7 +63,7 @@ void printprompt() {
 static char command[1024];
 
 // eefs fields
-char versionFileName [16] = "version";
+char buildFileName [16] = "build";
 char eefs_filename[128];
 char tempname[128];
 int32 fd;
@@ -212,25 +213,25 @@ int main(void) {
     ret = noosfs_mount();
   }
   if (ret >= 0) {
-    fd = noosfs_create( versionFileName);
+    fd = noosfs_create(buildFileName);
     if (fd >= 0) {
       ret = fd;
     }
   }
   if (ret >= 0) {
-    ret = noosfs_write(fd, dynamic_version, strlen(dynamic_version));
+    ret = noosfs_write(fd, dynamic_build, strlen(dynamic_build));
   }
   if (ret >= 0) {
     ret = noosfs_close(fd);
   }
   if (ret >= 0) {
-    fd = noosfs_open(versionFileName);
+    fd = noosfs_open(buildFileName);
     if (fd >= 0) {
       ret = fd;
     }
   }
   if (ret >= 0) {
-    ret = noosfs_read(fd, version, sizeof(version));
+    ret = noosfs_read(fd, build, sizeof(build));
   }
   if (ret >=0) {
     noosfs_close(fd);
@@ -273,20 +274,20 @@ int main(void) {
 	      // life is good!
 	      strcpy(tempname, eefs_mountpoint);
 	      strcat(tempname, "/");
-	      strcat(tempname, versionFile);
+	      strcat(tempname, buildFile);
 	      // printf("FullName: %s\n", tempname);
 	      fd = EEFS_Creat(tempname, 0);
 	      if (fd < 0) {
 	        printf("create failed!(%d)\n",fd);
 	      }
 	      // char data[9] = "v7-b";
-	      status = EEFS_Write(fd, dynamic_version, sizeof(dynamic_version));
+	      status = EEFS_Write(fd, dynamic_build, sizeof(build));
 	      // printf("Write Status: %d\n", status);
 	      status = EEFS_Close(fd);
 	      // printf("Close Status: %d\n", status);
         fd = EEFS_Open(tempname,0);
 	      // printf("Open Read fd: %d\n", fd);
-	      status = EEFS_Read(fd,version,sizeof(version));
+	      status = EEFS_Read(fd,build,sizeof(build));
 	      // printf("Read Status: %d\n", status);		      
 	      status = EEFS_Close(fd);
 	      // printf("Close Status: %d\n", status);
@@ -306,7 +307,7 @@ int main(void) {
   noosrt_malloc_init(((void *) noosrt_mem),_NOOSRT_MEM_SIZE );
   printf("Malloc Free Space: %d\n", noosrt_malloc_get_free_size());
 #endif
-  splash(version);
+  splash(version, build);
   printf("\n");
 printf("** for assitance, type 'help' <enter> **\n\n");
 	printf(time_msg, time(NULL));

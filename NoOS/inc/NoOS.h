@@ -9,7 +9,7 @@
 #ifndef NoOS_H
 #define NoOS_H
 
-void splash(char msg[]);
+void splash(int vers, char msg[]);
 
 // there map common (not all) eefs api calls to fopen, flcose, etc
 #define fopen(filename, mode)			EEFS_Open(filename, mode) // won't work
