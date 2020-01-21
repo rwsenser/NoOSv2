@@ -20,7 +20,7 @@
 //
 const int version = 2;
 char build[16] = "?????";
-char dynamic_build[16] = "v13-a";
+char dynamic_build[16] = "alpha 01";
 const char time_msg[] = "current CPU time (secs): %d\n";
 const char dur_msg[] = ("\nCPU duration secs: %d\n");
 const int max_programs = 20;
