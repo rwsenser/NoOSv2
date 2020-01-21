@@ -7,7 +7,7 @@ Bare Metal Demo
   +-grub       
     +-grub.cfg
     +-grub.zip               <---- expand this here          
-  +-noos                     <---- file built by NoOS
+  +-noosv2                   <---- file built by NoOS
   autorun.ico
   autorun.inf
   boot.catalog
