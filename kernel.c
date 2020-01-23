@@ -20,7 +20,7 @@
 //
 const int version = 2;
 char build[16] = "?????";
-char dynamic_build[16] = "alpha 01";
+char dynamic_build[16] = "alpha01";
 const char time_msg[] = "current CPU time (secs): %d\n";
 const char dur_msg[] = ("\nCPU duration secs: %d\n");
 const int max_programs = 20;
@@ -207,191 +207,143 @@ int main(void) {
   //
   // get the file system going
   //
-  int ret;
-  ret = noosfs_init();
-  if (ret >= 0) {
-    ret = noosfs_mount();
-  }
-  if (ret >= 0) {
-    fd = noosfs_create(buildFileName);
-    if (fd >= 0) {
-      ret = fd;
+  while (1) { /* outer loop */
+    int ret;
+    ret = noosfs_init();
+    if (ret >= 0) {
+      ret = noosfs_mount();
     }
-  }
-  if (ret >= 0) {
-    ret = noosfs_write(fd, dynamic_build, strlen(dynamic_build));
-  }
-  if (ret >= 0) {
-    ret = noosfs_close(fd);
-  }
-  if (ret >= 0) {
-    fd = noosfs_open(buildFileName);
-    if (fd >= 0) {
-      ret = fd;
+    if (ret >= 0) {
+      fd = noosfs_create(buildFileName);
+      if (fd >= 0) {
+        ret = fd;
+      }
     }
-  }
-  if (ret >= 0) {
-    ret = noosfs_read(fd, build, sizeof(build));
-  }
-  if (ret >=0) {
-    noosfs_close(fd);
-  }
-#if 0
-	//
-	// allocate mem for file system
-	//
-	FileSystem.BaseAddress = (void *) myBuffer; // malloc(mySize);
-	if (FileSystem.BaseAddress <= 0) {
-	   printf("malloc failed!\n");
-	} else {
-	  //
-	  // init file system field
-	  //
-	  memset(FileSystem.BaseAddress, 0,  mySize);
-	  FileSystem.FileAllocationTable = FileSystem.BaseAddress;
-	  FileSystem.FileAllocationTable->Header.Crc = 0;
-	  FileSystem.FileAllocationTable->Header.Magic = EEFS_FILESYS_MAGIC;
-	  FileSystem.FileAllocationTable->Header.Version = 1;
-	  FileSystem.FileAllocationTable->Header.FreeMemoryOffset = sizeof(EEFS_FileAllocationTable_t);
-	  FileSystem.FileAllocationTable->Header.FreeMemorySize = (mySize-sizeof(EEFS_FileAllocationTable_t));
-	  FileSystem.FileAllocationTable->Header.NumberOfFiles = 0;
-	  printf("FileAlloc Tab Size: %d\n",sizeof(EEFS_FileAllocationTable_t));
-	  printf("File FreeMemorySize: %d\n",FileSystem.FileAllocationTable->Header.FreeMemorySize);
-	  //
-	  // init & mount
-	  //
-	  EEFSMemoryAddress = (uint32)FileSystem.BaseAddress;
-	  status = EEFS_InitFS(DeviceName, EEFSMemoryAddress);
-	  if (status !=0) {
-	    printf("filesystem init failed!(%d)\n",status);
-	  } else {
-	    printf("Device Name: %s, Mount Point: %s\n", DeviceName, eefs_mountpoint);
-	    status = EEFS_Mount(DeviceName,eefs_mountpoint);
-	    if (status != 0) {
-	      printf("filesystem mount failed!(%d)\n", status);
-	    } else {
-	      // printf("filesystem mounted (%d)\n", status);
-	      // life is good!
-	      strcpy(tempname, eefs_mountpoint);
-	      strcat(tempname, "/");
-	      strcat(tempname, buildFile);
-	      // printf("FullName: %s\n", tempname);
-	      fd = EEFS_Creat(tempname, 0);
-	      if (fd < 0) {
-	        printf("create failed!(%d)\n",fd);
-	      }
-	      // char data[9] = "v7-b";
-	      status = EEFS_Write(fd, dynamic_build, sizeof(build));
-	      // printf("Write Status: %d\n", status);
-	      status = EEFS_Close(fd);
-	      // printf("Close Status: %d\n", status);
-        fd = EEFS_Open(tempname,0);
-	      // printf("Open Read fd: %d\n", fd);
-	      status = EEFS_Read(fd,build,sizeof(build));
-	      // printf("Read Status: %d\n", status);		      
-	      status = EEFS_Close(fd);
-	      // printf("Close Status: %d\n", status);
-	      // printf("updated version: %s\n", version);
-	    }
-	  }
-	}
-#endif
-	char *buff = command;
-	strcpy(&buff[strlen(buff)], "");
-	unsigned long start_cycles;
-	unsigned long end_cycles;
-	unsigned long duration_cycles;
-  int ctrl_pressed = 0;
+    if (ret >= 0) {
+      ret = noosfs_write(fd, dynamic_build, strlen(dynamic_build));
+    }
+    if (ret >= 0) {
+      ret = noosfs_close(fd);
+    }
+    if (ret >= 0) {
+      fd = noosfs_open(buildFileName);
+      if (fd >= 0) {
+        ret = fd;
+      }
+    }
+    if (ret >= 0) {
+      ret = noosfs_read(fd, build, sizeof(build));
+    }
+    if (ret >=0) {
+      noosfs_close(fd);
+    }
+	  char *buff = command;
+	  strcpy(&buff[strlen(buff)], "");
+	  unsigned long start_cycles;
+	  unsigned long end_cycles;
+	  unsigned long duration_cycles;
+    int ctrl_pressed = 0;
 #ifdef NOOSRT
-  // init malloc with actual storage and size
-  noosrt_malloc_init(((void *) noosrt_mem),_NOOSRT_MEM_SIZE );
-  printf("Malloc Free Space: %d\n", noosrt_malloc_get_free_size());
+    // init malloc with actual storage and size
+    noosrt_malloc_init(((void *) noosrt_mem),_NOOSRT_MEM_SIZE );
+    printf("Malloc Free Space: %d\n", noosrt_malloc_get_free_size());
 #endif
-  splash(version, build);
-  printf("\n");
-printf("** for assitance, type 'help' <enter> **\n\n");
-	printf(time_msg, time(NULL));
-	printprompt();
-	//
-	// process commands, 1 char at a time
-	//
-	while (1) {
-		uint8_t byte;
-		while (byte = scan()) {
+    splash(version, build);
+    printf("\n");
+    printf("** for assitance, type 'help' <enter> **\n\n");
+	  printf(time_msg, time(NULL));
+	  printprompt();
+	  //
+	  // process commands, 1 char at a time
+	  //
+    int do_restart = 0;
+	  while (1) { /* inner loop */
+		  uint8_t byte;
+		  while (byte = scan()) { /* input char processor */
 #ifdef NOOSRT
-      // add very Q&D ctrl-C support to restart input, NOOSRT only
-      if (byte == 0x1d) { // ctrl key down
-        ctrl_pressed = 1;
-        continue;
-      } else if (byte == 0x2e && ctrl_pressed) { // and c key down
-				printf("\nctrl-C detected!\n");
-				printprompt();
-				memset(&buff[0], 0, sizeof(buff));
+        // add very Q&D ctrl-C support to restart input, NOOSRT only
+        if (byte == 0x1d) { // ctrl key down
+          ctrl_pressed = 1;
+          continue;
+        } else if (byte == 0x2e && ctrl_pressed) { // and c key down
+				  printf("\nctrl-C detected!\n");
+				  printprompt();
+				  memset(&buff[0], 0, sizeof(buff));
+          ctrl_pressed = 0;
+          continue;
+        } 
         ctrl_pressed = 0;
-        continue;
-      } 
-      ctrl_pressed = 0;
-      // 
+        // 
 #endif 
 #ifdef NOOSRT
-			if (byte == 0x1c) {
-				printf("\n");
+			  if (byte == 0x1c) {
+				  printf("\n");
 #else
-			if (byte == '\n') {
+			  if (byte == '\n') {
 #endif	
-				duration_cycles = 0;
-				process_args(buff);  // set largc, largv -- largv[0] is required
-				if (strlen(largv[0]) > 0 && strcmp(largv[0], "exit") == 0) {
-					say_goodnight_dick(-1, (char **) NULL);
-				} else if (strlen(largv[0]) > 0 && strcmp(largv[0], "quit") == 0) {
-					say_goodnight_dick(-1, (char **) NULL);
-				} else if (strlen(largv[0]) > 0 && strcmp(largv[0], "show-pgms") == 0) {
-					showpgms(-1, (char **) NULL);
-				} else if (strlen(largv[0]) > 0 && strcmp(largv[0], "help") == 0) {
-					help(-1, (char **) NULL);
-				} else {
-					// general command dispatcher
-					// general command dispatcher
-					for (int j=0;j<max_programs;j++) {
-						if (strcmp(largv[0],comd_tab[j].name) == 0) {
-							start_cycles = time(NULL);
-							comd_tab[j].func(largc,(char **) largv); // duck!
-							end_cycles = time(NULL);
-							duration_cycles = end_cycles - start_cycles;
-							break;
-						}
-						if (comd_tab[j].func == NULL) {
-							printf("\nHuh?\n");
-							break;
-						}
-					}
-				}
-				// printf("\nDEBUG: %d\n", start_cycles);
-				// printf("DEBUG: %d\n", end_cycles);
-				printf(dur_msg, duration_cycles);
-				printf(time_msg, time(NULL));
-				printprompt();
-				memset(&buff[0], 0, sizeof(buff));
-        ctrl_pressed = 0;
-				break;
-			} else {
-				char *s;
+          // dispatch something
+				  duration_cycles = 0;
+				  process_args(buff);  // set largc, largv -- largv[0] is required
+				  if (strlen(largv[0]) > 0 && strcmp(largv[0], "exit") == 0) {
+					  say_goodnight_dick(-1, (char **) NULL);
+            do_restart = 1;
+            break;
+				  } else if (strlen(largv[0]) > 0 && strcmp(largv[0], "quit") == 0) {
+					  say_goodnight_dick(-1, (char **) NULL);
+            do_restart = 1;
+            break;
+				  } else if (strlen(largv[0]) > 0 && strcmp(largv[0], "show-pgms") == 0) {
+					  showpgms(-1, (char **) NULL);
+				  } else if (strlen(largv[0]) > 0 && strcmp(largv[0], "help") == 0) {
+					  help(-1, (char **) NULL);
+				  } else {
+					  // general command dispatcher
+					  for (int j=0;j<max_programs;j++) {
+						  if (strcmp(largv[0],comd_tab[j].name) == 0) {
+							  start_cycles = time(NULL);
+							  comd_tab[j].func(largc,(char **) largv); // duck!
+							  end_cycles = time(NULL);
+							  duration_cycles = end_cycles - start_cycles;
+							  break;
+						  }
+						  if (comd_tab[j].func == NULL) {
+							  printf("\nHuh?\n");
+							  break;
+					  	}
+				  	}
+			  	}
+				  // printf("\nDEBUG: %d\n", start_cycles);
+				  // printf("DEBUG: %d\n", end_cycles);
+				  printf(dur_msg, duration_cycles);
+				  printf(time_msg, time(NULL));
+				  printprompt();
+				  memset(&buff[0], 0, sizeof(buff));
+          ctrl_pressed = 0;
+				  break;
+		  	} else {
+			  	char *s;
 #ifdef NOOSRT
-				char c = normalmap[byte];
-				s = ctos(s, c);
-				printf("%s", s); // poor man's char echo
+			  	char c = normalmap[byte];
+			  	s = ctos(s, c);
+				  printf("%s", s); // poor man's char echo
 #else
-				char frog[4];
-				s = frog;
-				s[0] = byte;
-				s[1] = 0;
+				  char frog[4];
+				  s = frog;
+				  s[0] = byte;
+				  s[1] = 0;
 #endif
-				strcpy(&buff[strlen(buff)], s);
-			}
+				  strcpy(&buff[strlen(buff)], s);
+		  	}
 #ifdef NOSRRT
-			move_cursor(get_terminal_row(), get_terminal_col());
+			  move_cursor(get_terminal_row(), get_terminal_col());
 #endif			
-		}
-	}
+		  } /* end char processor */
+      if (do_restart) {
+        break;  // this only works for NOOSRT mode....
+                // in NOOSRT mode this will restart kernel
+      }
+    } /* end inner while */
+    // we can never leave!
+	} /* outter loop */
 	return 0;
 }
