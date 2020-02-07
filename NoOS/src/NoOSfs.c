@@ -112,7 +112,7 @@ int noosfs_open(char filename[]) {
 	strcpy(tempname, eefs_mountpoint);
 	strcat(tempname, "/");
 	strcat(tempname, filename);
-  fd = EEFS_Open(tempname,0);
+  fd = EEFS_Open(tempname,O_RDWR);  // was 0
   if (fd < 0) {
     printf("open failed!(%d)\n",fd);
   }
@@ -134,6 +134,52 @@ int noosfs_close(int32 fd) {
   int32 status;
 	status = EEFS_Close(fd);
 	// printf("Close Status: %d\n", status);
+  return status;
+}
+int noosfs_list(char prefix[]) {
+  int32 status = 0;
+  DirDescriptor = EEFS_OpenDir(eefs_mountpoint);
+  if (DirDescriptor != NULL) {
+    printf("free memory size: %d\n\n",FileSystem.FileAllocationTable->Header.FreeMemorySize);
+    int total_used_space = 0;
+    int total_free_space = 0;
+    while ( (DirEntry = EEFS_ReadDir(DirDescriptor)) != NULL) {
+      if (DirEntry->InUse != 0) {
+        printf("%s%s",prefix,DirEntry->Filename);
+      }
+      strcpy(eefs_filename, eefs_mountpoint);
+      strcat(eefs_filename,"/");
+      strcat(eefs_filename,DirEntry->Filename);
+      status = EEFS_Stat(eefs_filename, &StatBuffer);
+      if (status == 0) {
+         int size = StatBuffer.FileSize;
+         int max = DirEntry -> MaxFileSize;
+         total_used_space += size;
+         total_free_space += (max - size);
+         printf(" (size: %d max: %d)\n", size, max);
+      } else {
+        printf("\n");
+      }
+    }
+    printf("\n");
+    printf("in-file used: %d\n", total_used_space);
+    printf("in-file free: %d\n", total_free_space);
+    status = EEFS_CloseDir(DirDescriptor);
+    if (status != 0) {
+       printf("Close Dir failed!\n");
+    } 
+  } else {
+    printf("Dir Open failed!\n");
+    status = -1;
+  }
+  return status;
+}
+int noosfs_delete(char filename[]) {
+  int32 status;
+	strcpy(tempname, eefs_mountpoint);
+	strcat(tempname, "/");
+	strcat(tempname, filename);
+  status =  EEFS_Remove(tempname);
   return status;
 }
 /* end of module */

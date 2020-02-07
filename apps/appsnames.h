@@ -3,4 +3,4 @@
             SHOWCMOS_APP,
             SHOWMEM_APP,
             MALLOCTST_APP,
-
+						FILEMAN_APP,

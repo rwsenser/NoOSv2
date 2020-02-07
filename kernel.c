@@ -3,20 +3,20 @@
 //
 //  loosely based on kernel.c from book:  
 // 
-// to-dos: (2019-12-29):
-// 1)  Clean up Makefile
-// 2)  Add a open source license
-// 3)  Write version 1 document
+// to-dos: (as of 2019-12-29):
 // 1d)  Done - Keyboard: fix cursor (on baremetal, turn off in start.asm)
 // 2d)  Done - Keyboard edits: ^c for start over 
 // 3d)  Done - Rationalize f<op>/eefs file support
 // 4d)  Done - Comment malloc with mem leak comments
-// d5)  DOne - Finish time to read twice
+// 5d)  Done - Finish time to read twice
+// d6)  Done - Add an open source license
 //     Future:
 // 1f) Enhance malloc to reuse storage (simple table...)
 // 2f) Enhance keyboard edit to have backspace and pre-line repeat
 // 3f) Make configurable, things like malloc area, file space size, stack size, etc.
 // 4f) Add a reboot command
+// 5f) Clean up Makefile
+// f2) Write full version 2 document
 //
 const int version = 2;
 char build[16] = "?????";
@@ -43,8 +43,6 @@ const int max_programs = 20;
 #include "NoOS.h"
 #include "NoOSfs.h"
 #include "common_types.h"
-// #include "eefs_filesys.h"
-// #include "eefs_fileapi.h"
 
 
 #ifdef NOOSRT

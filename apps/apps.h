@@ -10,4 +10,4 @@
 #include "primes.h"
 #include "showmem.h"
 #include "malloctst.h"
-
+#include "fileman.h"

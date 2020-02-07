@@ -14,3 +14,5 @@ int noosfs_open(char filename[]);
 int noosfs_read(int32 fd, char buffer[], size_t buffer_size);
 int noosfs_write(int32 fd, char buffer[], size_t buffer_size);
 int noosfs_close(int32 fd);
+int noosfs_list(char prefix[]);
+int noosfs_delete(char filename[]); 
