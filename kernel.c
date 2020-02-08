@@ -2,7 +2,34 @@
 // kernel.c for NoOS, with eefs calls
 //
 //  loosely based on kernel.c from book:  
-// 
+//
+// alpha02: 
+// 2020-02-08: Add licensing/ownership comments:
+// items in NoOS not covered by other licenses are coverted by the MIT License:
+  /*
+MIT License
+
+Copyright (c) 2020 rwsenser
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+  */
+//
 // to-dos: (as of 2019-12-29):
 // 1d)  Done - Keyboard: fix cursor (on baremetal, turn off in start.asm)
 // 2d)  Done - Keyboard edits: ^c for start over 
@@ -20,7 +47,7 @@
 //
 const int version = 2;
 char build[16] = "?????";
-char dynamic_build[16] = "alpha01";
+char dynamic_build[16] = "alpha02";
 const char time_msg[] = "current CPU time (secs): %d\n";
 const char dur_msg[] = ("\nCPU duration secs: %d\n");
 const int max_programs = 20;
@@ -207,6 +234,9 @@ int main(void) {
   //
   while (1) { /* outer loop */
     int ret;
+    // added 02/08/2020:
+    printf("NoOS uses the NASA eefs file system and is based on ideas and code in\n");
+    printf("the Lucas Darnell booklet (ASIN: B01KU8N6FC). See Git for details.\n\n");
     ret = noosfs_init();
     if (ret >= 0) {
       ret = noosfs_mount();

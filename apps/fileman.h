@@ -4,6 +4,9 @@
 
 // prefix: fman
 
+// alpha02: 2020-02-08:
+// add simple help
+
 #define FILEMAN_APP {"fileman",fileman_run,"file manager util"}
 
 // needed:
@@ -96,7 +99,7 @@ int fileman_run(int argc, char** argv) {
   int fd;
   address = (long) &data;
   while (1) {
-    printf("\nCommands: a(dd), k(ill), l(ist), r(ewrite), s(how), x(it)\n");
+    printf("\nCommands: a(dd), h(elp), k(ill), l(ist), r(ewrite), s(how), x(it)\n");
     printf(":");
     cmd = _fman_getchar();
     _fman_chompcr(); // eat enter key
@@ -129,6 +132,9 @@ int fileman_run(int argc, char** argv) {
         }
         status =  noosfs_close(fd);
       }
+    } else if (cmd == 'h') {
+      // help info
+      printf("Choices: a(dd) file, k(ill) file, l(ist) files, r(ewrite) file, s(how) file conents, (e)x(it)\n");
     } else if (cmd == 'k') {
       // kill file
       _fman_getFileName(filename);
